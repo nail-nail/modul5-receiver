@@ -95,4 +95,8 @@ async fn unsubscribe_request(product_type: String) -> Result<SubscriberRequest> 
         let subscriber_result: Notification = NotificationRepository::add(payload);
         return Ok(subscriber_result);
     }
+    
+    pub fn list_messages() -> Result<Vec<String>> {
+        return Ok(NotificationRepository::list_all_as_string());
+    }
 }
