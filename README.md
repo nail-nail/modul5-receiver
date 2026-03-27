@@ -85,5 +85,13 @@ This is the place for you to write reflections:
 ### Mandatory (Subscriber) Reflections
 
 #### Reflection Subscriber-1
+1. 
+In this tutorial, we used RwLock<> to synchronise the use of Vec of Notifications. Explain why 
+it is necessary for this case, and explain why we do not use Mutex<> instead? 
+Multiple Rocket requests may read the notification list at the same time while only occasionally mutating it. RwLock lets many readers hold the lock simultaneously and still provides exclusive access for writers, so the list stays consistent without blocking every read. Using a Mutex would serialize all access (even read-only ones), so the system would lose concurrency for no reason.
+2. In this tutorial, we used lazy_static external library to define Vec and DashMap as a “static” 
+variable. Compared to Java where we can mutate the content of a static variable via a 
+static function, why did not Rust allow us to do so?
+Rust forbids freely mutating plain static variables because the compiler cannot prove that concurrent threads will not alias the same mutable reference. To keep the language memory-safe, global mutability must be wrapped in safe abstractions (e.g., lazy_static + RwLock/Mutex) that enforce synchronization explicitly, unlike Java’s runtime-checked approach.
 
 #### Reflection Subscriber-2
