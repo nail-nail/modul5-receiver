@@ -95,3 +95,17 @@ static function, why did not Rust allow us to do so?
 Rust forbids freely mutating plain static variables because the compiler cannot prove that concurrent threads will not alias the same mutable reference. To keep the language memory-safe, global mutability must be wrapped in safe abstractions (e.g., lazy_static + RwLock/Mutex) that enforce synchronization explicitly, unlike Java’s runtime-checked approach.
 
 #### Reflection Subscriber-2
+1. 
+Have you explored things outside of the steps in the tutorial, for example: src/lib.rs? If not, 
+explain why you did not do so. If yes, explain things that you have learned from those other 
+parts of code. 
+I have taken time to read the code outside the guided steps, especially `src/lib.rs`, to understand how the shared configuration, HTTP client, and helper utilities are wired. Seeing how the module exposes `APP_CONFIG`, `REQWEST_CLIENT`, and `compose_error_response` clarifies how the rest of the application depends on that central library for consistent behaviour.
+2. Since you have completed the tutorial by now and have tried to test your notification system 
+by spawning multiple instances of Receiver, explain how Observer pattern eases you to plug 
+in more subscribers. How about spawning more than one instance of Main app, will it still be 
+easy enough to add to the system? 
+Observer fits this receiver well because every instance only needs to know how to subscribe/unsubscribe and react to notifications. Once a product type is mapped to a subscriber at the publisher, spinning up extra receiver instances or subscribing them to new topics only involves extra HTTP calls—no existing code has to be touched—so adding more observers remains straightforward. However, running multiple Main app instances would introduce complexity. Each instance maintains its own in-memory SUBSCRIBERS list, so a subscriber registered on one instance would not be visible to the other, meaning notifications could be missed
+3. Have you tried to make your own Tests, or enhance documentation on your Postman 
+collection? If you have tried those features, tell us whether it is useful for your work (it can be 
+your tutorial work or your Group Project). 
+I have not yet created my own automated tests for this tutorial, but I did explore Postman's environment variables and collection runner features to switch between the three receiver instances more efficiently. While manual testing was sufficient for this tutorial's scale, I can see how Postman's built-in test scripts under the Tests tab would be useful for larger projects: you can assert response status codes and body fields automatically, which would reduce repetitive manual checking as the API grows.
